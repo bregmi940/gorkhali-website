@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #121212;
+      color: #D4AF37;
+    }
+    button {
+      background: #8B0000;
+      color: #D4AF37;
+      border: none;
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .result {
+      margin-top: 10px;
+      padding: 10px;
+      background: #1A1A1A;
+      border-radius: 4px;
+    }
+    h1, h2 {
+      color: #D4AF37;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gorkhali Audio Test</h1>
+  <p>Esta página te permite probar los archivos de audio para asegurarte de que funcionan correctamente.</p>
+  
+  <h2>Efectos de Sonido</h2>
+  <div>
+    <button onclick="playSound('/beep.mp3')">Beep (Hover)</button>
+    <button onclick="playSound('/click.mp3')">Click (Interacción)</button>
+  </div>
+  
+  <h2>Música</h2>
+  <div>
+    <button onclick="playMusic('/sounds/gorkhali.mp3')">Música Gorkhali</button>
+    <button onclick="stopMusic()">Detener Música</button>
+  </div>
+  
+  <div class="result" id="result">Resultado: Esperando acción...</div>
+  
+  <script>
+    let currentMusic = null;
+    
+    function playSound(src) {
+      try {
+        const audio = new Audio(src);
+        audio.volume = 0.5;
+        
+        audio.onplay = () => {
+          document.getElementById('result').textContent = `Reproduciendo: ${src}`;
+        };
+        
+        audio.onerror = (e) => {
+          document.getElementById('result').textContent = `Error al reproducir ${src}: ${e.message || 'Error desconocido'}`;
+        };
+        
+        audio.play().catch(error => {
+          document.getElementById('result').textContent = `Error al reproducir ${src}: ${error.message}`;
+        });
+      } catch (error) {
+        document.getElementById('result').textContent = `Error al crear audio ${src}: ${error.message}`;
+      }
+    }
+    
+    function playMusic(src) {
+      stopMusic();
+      
+      try {
+        currentMusic = new Audio(src);
+        currentMusic.volume = 0.3;
+        currentMusic.loop = true;
+        
+        currentMusic.onplay = () => {
+          document.getElementById('result').textContent = `Reproduciendo música: ${src}`;
+        };
+        
+        currentMusic.onerror = (e) => {
+          document.getElementById('result').textContent = `Error al reproducir música ${src}: ${e.message || 'Error desconocido'}`;
+        };
+        
+        currentMusic.play().catch(error => {
+          document.getElementById('result').textContent = `Error al reproducir música ${src}: ${error.message}`;
+        });
+      } catch (error) {
+        document.getElementById('result').textContent = `Error al crear música ${src}: ${error.message}`;
+      }
+    }
+    
+    function stopMusic() {
+      if (currentMusic) {
+        currentMusic.pause();
+        currentMusic = null;
+        document.getElementById('result').textContent = 'Música detenida';
+      }
+    }
+  </script>
+</body>
+</html>
